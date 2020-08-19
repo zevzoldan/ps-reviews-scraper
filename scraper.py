@@ -2,10 +2,14 @@ import requests
 import csv
 from bs4 import BeautifulSoup
 import time
-import re
 
+
+#calculate how long it takes to ruin this (see math and print at bottom)
 start = time.time()
-for i in range(62):
+
+#loop thru all review pages
+
+for i in range(100):
     main_URL = 'https://apps.shopify.com/postscript-sms-marketing/reviews?page='
     URL = main_URL+str(i)
 
@@ -14,7 +18,8 @@ for i in range(62):
     results = soup.find(id='Main')
     reviews = results.find_all('div', class_="review-listing")
 
-    with open("ps_reviews_updated_new.txt", "a", newline="") as f:
+    with open("ps_reviews.csv", "a", newline="") as f:
+        writer = csv.writer(f)
         for review in reviews:
             shop = review.find('div', class_="review-listing-header")
             content = review.find('div', class_="truncate-content-copy")
@@ -26,14 +31,9 @@ for i in range(62):
             display_star = star.text.strip() + "\n"*2
            
 
-            print()
+            #print([display_name, display_star, display_text])
 
-            f.write("Shop Name: ")
-            f.write(display_name)
-            f.write("Star: ")
-            f.write(display_star)
-            f.write("Review Content: ")
-            f.write(display_text)
+            writer.writerow([display_name, display_star, display_text])
             
             
 
